@@ -106,7 +106,9 @@ am_mistle_root_OBJECTS = mistle_root-mistle_root.$(OBJEXT) \
 	mistle_root-protect_from_oom_killer.$(OBJEXT) \
 	mistle_root-kernel_memory_by_pipe.$(OBJEXT) \
 	mistle_root-hack_addr_limit.$(OBJEXT) \
-	mistle_root-futex.$(OBJEXT) mistle_root-exploit.$(OBJEXT)
+	mistle_root-futex.$(OBJEXT) mistle_root-exploit.$(OBJEXT) \
+	mistle_root-cred.$(OBJEXT) mistle_root-kallsyms.$(OBJEXT) \
+	mistle_root-ptmx.$(OBJEXT)
 mistle_root_OBJECTS = $(am_mistle_root_OBJECTS)
 mistle_root_LDADD = $(LDADD)
 mistle_root_LINK = $(CCLD) $(mistle_root_CFLAGS) $(CFLAGS) \
@@ -279,8 +281,8 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-mistle_root_SOURCES = mistle_root.c protect_from_oom_killer.c kernel_memory_by_pipe.c hack_addr_limit.c futex.c exploit.c
-mistle_root_CFLAGS = -fno-stack-protector -m32 -O0 -pthread
+mistle_root_SOURCES = mistle_root.c protect_from_oom_killer.c kernel_memory_by_pipe.c hack_addr_limit.c futex.c exploit.c cred.c kallsyms.c ptmx.c
+mistle_root_CFLAGS = -fno-stack-protector -m32 -O0 -static -pthread
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -387,12 +389,15 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/mistle_root-cred.Po
 include ./$(DEPDIR)/mistle_root-exploit.Po
 include ./$(DEPDIR)/mistle_root-futex.Po
 include ./$(DEPDIR)/mistle_root-hack_addr_limit.Po
+include ./$(DEPDIR)/mistle_root-kallsyms.Po
 include ./$(DEPDIR)/mistle_root-kernel_memory_by_pipe.Po
 include ./$(DEPDIR)/mistle_root-mistle_root.Po
 include ./$(DEPDIR)/mistle_root-protect_from_oom_killer.Po
+include ./$(DEPDIR)/mistle_root-ptmx.Po
 
 .c.o:
 	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -491,6 +496,48 @@ mistle_root-exploit.obj: exploit.c
 #	$(AM_V_CC)source='exploit.c' object='mistle_root-exploit.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -c -o mistle_root-exploit.obj `if test -f 'exploit.c'; then $(CYGPATH_W) 'exploit.c'; else $(CYGPATH_W) '$(srcdir)/exploit.c'; fi`
+
+mistle_root-cred.o: cred.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -MT mistle_root-cred.o -MD -MP -MF $(DEPDIR)/mistle_root-cred.Tpo -c -o mistle_root-cred.o `test -f 'cred.c' || echo '$(srcdir)/'`cred.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/mistle_root-cred.Tpo $(DEPDIR)/mistle_root-cred.Po
+#	$(AM_V_CC)source='cred.c' object='mistle_root-cred.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -c -o mistle_root-cred.o `test -f 'cred.c' || echo '$(srcdir)/'`cred.c
+
+mistle_root-cred.obj: cred.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -MT mistle_root-cred.obj -MD -MP -MF $(DEPDIR)/mistle_root-cred.Tpo -c -o mistle_root-cred.obj `if test -f 'cred.c'; then $(CYGPATH_W) 'cred.c'; else $(CYGPATH_W) '$(srcdir)/cred.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/mistle_root-cred.Tpo $(DEPDIR)/mistle_root-cred.Po
+#	$(AM_V_CC)source='cred.c' object='mistle_root-cred.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -c -o mistle_root-cred.obj `if test -f 'cred.c'; then $(CYGPATH_W) 'cred.c'; else $(CYGPATH_W) '$(srcdir)/cred.c'; fi`
+
+mistle_root-kallsyms.o: kallsyms.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -MT mistle_root-kallsyms.o -MD -MP -MF $(DEPDIR)/mistle_root-kallsyms.Tpo -c -o mistle_root-kallsyms.o `test -f 'kallsyms.c' || echo '$(srcdir)/'`kallsyms.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/mistle_root-kallsyms.Tpo $(DEPDIR)/mistle_root-kallsyms.Po
+#	$(AM_V_CC)source='kallsyms.c' object='mistle_root-kallsyms.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -c -o mistle_root-kallsyms.o `test -f 'kallsyms.c' || echo '$(srcdir)/'`kallsyms.c
+
+mistle_root-kallsyms.obj: kallsyms.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -MT mistle_root-kallsyms.obj -MD -MP -MF $(DEPDIR)/mistle_root-kallsyms.Tpo -c -o mistle_root-kallsyms.obj `if test -f 'kallsyms.c'; then $(CYGPATH_W) 'kallsyms.c'; else $(CYGPATH_W) '$(srcdir)/kallsyms.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/mistle_root-kallsyms.Tpo $(DEPDIR)/mistle_root-kallsyms.Po
+#	$(AM_V_CC)source='kallsyms.c' object='mistle_root-kallsyms.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -c -o mistle_root-kallsyms.obj `if test -f 'kallsyms.c'; then $(CYGPATH_W) 'kallsyms.c'; else $(CYGPATH_W) '$(srcdir)/kallsyms.c'; fi`
+
+mistle_root-ptmx.o: ptmx.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -MT mistle_root-ptmx.o -MD -MP -MF $(DEPDIR)/mistle_root-ptmx.Tpo -c -o mistle_root-ptmx.o `test -f 'ptmx.c' || echo '$(srcdir)/'`ptmx.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/mistle_root-ptmx.Tpo $(DEPDIR)/mistle_root-ptmx.Po
+#	$(AM_V_CC)source='ptmx.c' object='mistle_root-ptmx.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -c -o mistle_root-ptmx.o `test -f 'ptmx.c' || echo '$(srcdir)/'`ptmx.c
+
+mistle_root-ptmx.obj: ptmx.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -MT mistle_root-ptmx.obj -MD -MP -MF $(DEPDIR)/mistle_root-ptmx.Tpo -c -o mistle_root-ptmx.obj `if test -f 'ptmx.c'; then $(CYGPATH_W) 'ptmx.c'; else $(CYGPATH_W) '$(srcdir)/ptmx.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/mistle_root-ptmx.Tpo $(DEPDIR)/mistle_root-ptmx.Po
+#	$(AM_V_CC)source='ptmx.c' object='mistle_root-ptmx.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -c -o mistle_root-ptmx.obj `if test -f 'ptmx.c'; then $(CYGPATH_W) 'ptmx.c'; else $(CYGPATH_W) '$(srcdir)/ptmx.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
