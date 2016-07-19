@@ -140,12 +140,16 @@ futex_process_kernel_memory_requests(void)
   }
 }
 
-static void
+//static void
+//init_futex_exploit(void)
+void
 init_futex_exploit(void)
 {
   pid_t pid;
+  printf("[%s]enter\n", __FUNCTION__);
 
   if (!create_server_socket()) {
+      printf("[%s]create_server_socket failed\n", __FUNCTION__);
     return;
   }
 

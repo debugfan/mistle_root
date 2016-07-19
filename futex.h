@@ -12,6 +12,8 @@ extern bool futex_write_values_at_address(unsigned long address, const int *valu
 
 extern bool futex_run_exploit(unsigned long int address, int value,
                              bool(*exploit_callback)(void* user_data), void *user_data);
+                             
+extern void init_futex_exploit(void);
 
 
 #endif /* FUTEX_H */

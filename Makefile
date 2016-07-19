@@ -108,7 +108,7 @@ am_mistle_root_OBJECTS = mistle_root-mistle_root.$(OBJEXT) \
 	mistle_root-hack_addr_limit.$(OBJEXT) \
 	mistle_root-futex.$(OBJEXT) mistle_root-exploit.$(OBJEXT) \
 	mistle_root-cred.$(OBJEXT) mistle_root-kallsyms.$(OBJEXT) \
-	mistle_root-ptmx.$(OBJEXT)
+	mistle_root-ptmx.$(OBJEXT) mistle_root-map_hack_cred.$(OBJEXT)
 mistle_root_OBJECTS = $(am_mistle_root_OBJECTS)
 mistle_root_LDADD = $(LDADD)
 mistle_root_LINK = $(CCLD) $(mistle_root_CFLAGS) $(CFLAGS) \
@@ -281,7 +281,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-mistle_root_SOURCES = mistle_root.c protect_from_oom_killer.c kernel_memory_by_pipe.c hack_addr_limit.c futex.c exploit.c cred.c kallsyms.c ptmx.c
+mistle_root_SOURCES = mistle_root.c protect_from_oom_killer.c kernel_memory_by_pipe.c hack_addr_limit.c futex.c exploit.c cred.c kallsyms.c ptmx.c map_hack_cred.c
 mistle_root_CFLAGS = -fno-stack-protector -m32 -O0 -static -pthread
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -395,6 +395,7 @@ include ./$(DEPDIR)/mistle_root-futex.Po
 include ./$(DEPDIR)/mistle_root-hack_addr_limit.Po
 include ./$(DEPDIR)/mistle_root-kallsyms.Po
 include ./$(DEPDIR)/mistle_root-kernel_memory_by_pipe.Po
+include ./$(DEPDIR)/mistle_root-map_hack_cred.Po
 include ./$(DEPDIR)/mistle_root-mistle_root.Po
 include ./$(DEPDIR)/mistle_root-protect_from_oom_killer.Po
 include ./$(DEPDIR)/mistle_root-ptmx.Po
@@ -538,6 +539,20 @@ mistle_root-ptmx.obj: ptmx.c
 #	$(AM_V_CC)source='ptmx.c' object='mistle_root-ptmx.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -c -o mistle_root-ptmx.obj `if test -f 'ptmx.c'; then $(CYGPATH_W) 'ptmx.c'; else $(CYGPATH_W) '$(srcdir)/ptmx.c'; fi`
+
+mistle_root-map_hack_cred.o: map_hack_cred.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -MT mistle_root-map_hack_cred.o -MD -MP -MF $(DEPDIR)/mistle_root-map_hack_cred.Tpo -c -o mistle_root-map_hack_cred.o `test -f 'map_hack_cred.c' || echo '$(srcdir)/'`map_hack_cred.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/mistle_root-map_hack_cred.Tpo $(DEPDIR)/mistle_root-map_hack_cred.Po
+#	$(AM_V_CC)source='map_hack_cred.c' object='mistle_root-map_hack_cred.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -c -o mistle_root-map_hack_cred.o `test -f 'map_hack_cred.c' || echo '$(srcdir)/'`map_hack_cred.c
+
+mistle_root-map_hack_cred.obj: map_hack_cred.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -MT mistle_root-map_hack_cred.obj -MD -MP -MF $(DEPDIR)/mistle_root-map_hack_cred.Tpo -c -o mistle_root-map_hack_cred.obj `if test -f 'map_hack_cred.c'; then $(CYGPATH_W) 'map_hack_cred.c'; else $(CYGPATH_W) '$(srcdir)/map_hack_cred.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/mistle_root-map_hack_cred.Tpo $(DEPDIR)/mistle_root-map_hack_cred.Po
+#	$(AM_V_CC)source='map_hack_cred.c' object='mistle_root-map_hack_cred.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mistle_root_CFLAGS) $(CFLAGS) -c -o mistle_root-map_hack_cred.obj `if test -f 'map_hack_cred.c'; then $(CYGPATH_W) 'map_hack_cred.c'; else $(CYGPATH_W) '$(srcdir)/map_hack_cred.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

